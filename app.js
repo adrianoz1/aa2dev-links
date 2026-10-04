@@ -6,6 +6,15 @@ const icons = {
 
 const site = window.site
 
+function trackClick(name, href, kind) {
+  if (typeof gtag !== "function") return
+  gtag("event", "click_link", {
+    link_name: name,
+    link_url: href,
+    link_kind: kind,
+  })
+}
+
 document.querySelector("[data-name]").textContent = site.profile.name
 document.querySelector("[data-handle]").textContent = site.profile.handle
 document.querySelector("[data-bio]").textContent = site.profile.bio
@@ -31,6 +40,9 @@ socialList.replaceChildren(
     link.target = "_blank"
     link.rel = "noopener noreferrer"
     link.innerHTML = `${icons[social.name] ?? ""}<span>${social.name}</span>`
+    link.addEventListener("click", () => {
+      trackClick(social.name, social.href, "social")
+    })
     return link
   }),
 )
@@ -57,6 +69,9 @@ if (site.products.length === 0) {
         note.textContent = product.note
         link.append(note)
       }
+      link.addEventListener("click", () => {
+        trackClick(product.name, product.href, "product")
+      })
       return link
     }),
   )
