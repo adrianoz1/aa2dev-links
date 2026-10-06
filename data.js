@@ -10,8 +10,14 @@ const socials = [
   { name: "TikTok", href: "https://www.tiktok.com/@aa2dev" },
 ]
 
+// Quando o endereço existir, preencha href.
+const roadmap = {
+  name: "Roadmap",
+  href: "",
+}
+
 // Cada item: { name, href, note? }
 // Exemplo: { name: "Relé Wi-Fi", href: "https://...", note: "o do quadro do vídeo" }
 const products = []
 
-window.site = { profile, socials, products }
+window.site = { profile, socials, products, roadmap }
