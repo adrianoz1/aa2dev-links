@@ -42,8 +42,10 @@ function createRoadmap(roadmap) {
     return item
   }
   item.href = roadmap.href
-  item.target = "_blank"
-  item.rel = "noopener noreferrer"
+  if (/^https?:/i.test(roadmap.href)) {
+    item.target = "_blank"
+    item.rel = "noopener noreferrer"
+  }
   item.addEventListener("click", () => {
     trackClick(roadmap.name, roadmap.href, "roadmap")
   })
