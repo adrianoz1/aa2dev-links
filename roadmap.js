@@ -6,11 +6,11 @@ const months = [
     focus: "Programação + backend",
     project: "Task Management API",
     color: "#ffd45c",
-    note: "Sem LangChain, RAG, agentes ou MCP. Primeiro uma aplicação normal. Python é a linguagem principal. TypeScript entra depois.",
+    note: "Sem LangChain, RAG, agentes ou MCP. Primeiro uma aplicação normal. Recomendamos Python como linguagem principal.",
     weeks: [
       {
         n: 1,
-        title: "Python de verdade",
+        title: "Python",
         blocks: [
           {
             label: "Estude",
