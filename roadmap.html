@@ -30,8 +30,31 @@
       </p>
     </header>
 
-    <ol class="trail" data-trail></ol>
-    <section class="extras" data-extras></section>
+    <div class="roadmap" data-roadmap>
+      <ol class="trail" data-trail></ol>
+      <section class="extras" data-extras></section>
+      <form class="gate" data-gate hidden>
+        <p class="kicker">Continua daqui</p>
+        <h2>Os meses 4, 5 e 6</h2>
+        <p class="gate-copy">
+          Deixa seu e-mail para abrir o resto da trilha neste aparelho.
+        </p>
+        <label class="gate-label" for="gate-email">E-mail</label>
+        <input
+          id="gate-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          placeholder="voce@email.com"
+        />
+        <p class="gate-error" data-gate-error hidden>Informe um e-mail válido.</p>
+        <button class="gate-submit" type="submit">Liberar a trilha</button>
+        <p class="gate-consent">
+          Vou usar este e-mail para avisar atualizações da trilha.
+        </p>
+      </form>
+    </div>
 
     <dialog class="sheet" data-sheet>
       <div class="sheet-card">

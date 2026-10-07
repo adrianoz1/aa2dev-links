@@ -718,11 +718,34 @@ const extras = [
   },
 ]
 
+const UNLOCK_KEY = "aa2dev-roadmap-email"
+const FREE_MONTHS = 3
+
+const roadmap = document.querySelector("[data-roadmap]")
 const trail = document.querySelector("[data-trail]")
 const extrasRoot = document.querySelector("[data-extras]")
+const gate = document.querySelector("[data-gate]")
+const gateError = document.querySelector("[data-gate-error]")
 const sheet = document.querySelector("[data-sheet]")
 const sheetBody = document.querySelector("[data-sheet-body]")
 let openId = months[0].id
+let unlocked = readUnlock()
+
+function readUnlock() {
+  try {
+    return Boolean(localStorage.getItem(UNLOCK_KEY))
+  } catch {
+    return false
+  }
+}
+
+function saveUnlock(email) {
+  try {
+    localStorage.setItem(UNLOCK_KEY, email)
+  } catch {
+    unlocked = true
+  }
+}
 
 function el(tag, className, text) {
   const node = document.createElement(tag)
@@ -764,24 +787,28 @@ sheet.addEventListener("click", (event) => {
 
 function render() {
   trail.replaceChildren(
-    ...months.map((month) => {
-      const open = month.id === openId
+    ...months.map((month, index) => {
+      const locked = !unlocked && index >= FREE_MONTHS
+      const open = !locked && month.id === openId
       const step = el("li", open ? "step is-open" : "step")
+      if (locked) step.classList.add("is-locked")
       step.style.setProperty("--step", month.color)
 
       const marker = el("button", "marker", month.number)
       marker.type = "button"
+      marker.disabled = locked
       marker.setAttribute("aria-expanded", String(open))
       marker.setAttribute("aria-controls", month.id)
-      marker.addEventListener("click", () => toggle(month.id))
+      if (!locked) marker.addEventListener("click", () => toggle(month.id))
 
       const card = el("article", "card")
       card.id = month.id
 
       const summary = el("button", "summary")
       summary.type = "button"
+      summary.disabled = locked
       summary.setAttribute("aria-expanded", String(open))
-      summary.addEventListener("click", () => toggle(month.id))
+      if (!locked) summary.addEventListener("click", () => toggle(month.id))
       summary.append(
         el("p", "kicker", `Mês ${Number(month.number)} · ${month.focus}`),
         el("h2", "", month.title),
@@ -792,25 +819,27 @@ function render() {
 
       const detail = el("div", "detail")
       detail.hidden = !open
-      detail.append(el("p", "month-note", month.note))
-
-      const weeks = el("ol", "weeks")
-      month.weeks.forEach((week) => {
-        const item = el("li", "week")
-        const button = el("button", "week-open", `Semana ${week.n} · ${week.title}`)
-        button.type = "button"
-        button.addEventListener("click", () => {
-          openSheet(`Semana ${week.n}`, week.title, week.blocks)
+      if (!locked) {
+        detail.append(el("p", "month-note", month.note))
+        const weeks = el("ol", "weeks")
+        month.weeks.forEach((week) => {
+          const item = el("li", "week")
+          const button = el("button", "week-open", `Semana ${week.n} · ${week.title}`)
+          button.type = "button"
+          button.addEventListener("click", () => {
+            openSheet(`Semana ${week.n}`, week.title, week.blocks)
+          })
+          item.append(button)
+          weeks.append(item)
         })
-        item.append(button)
-        weeks.append(item)
-      })
-      detail.append(weeks)
+        detail.append(weeks)
+      }
       card.append(summary, detail)
       step.append(marker, card)
       return step
     }),
   )
+  applyGate()
 }
 
 function toggle(id) {
@@ -824,14 +853,58 @@ function renderExtras() {
     ...extras.map((extra) => {
       const button = el("button", "extra")
       button.type = "button"
+      button.disabled = !unlocked
       button.append(el("span", "kicker", extra.kicker), el("strong", "", extra.title))
-      button.addEventListener("click", () => {
-        openSheet(extra.kicker, extra.title, extra.blocks)
-      })
+      if (unlocked) {
+        button.addEventListener("click", () => {
+          openSheet(extra.kicker, extra.title, extra.blocks)
+        })
+      }
       return button
     }),
   )
+  extrasRoot.classList.toggle("is-locked", !unlocked)
+  extrasRoot.inert = !unlocked
 }
+
+function applyGate() {
+  const lockedSteps = trail.querySelectorAll(".is-locked")
+  lockedSteps.forEach((step) => {
+    step.inert = true
+  })
+  if (unlocked) {
+    gate.hidden = true
+    return
+  }
+  const first = lockedSteps[0]
+  if (!first) return
+  const top = first.getBoundingClientRect().top - roadmap.getBoundingClientRect().top
+  gate.style.top = `${top + 28}px`
+  gate.hidden = false
+}
+
+function validEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
+gate.addEventListener("submit", (event) => {
+  event.preventDefault()
+  const email = new FormData(gate).get("email").trim()
+  if (!validEmail(email)) {
+    gateError.hidden = false
+    return
+  }
+  gateError.hidden = true
+  saveUnlock(email)
+  unlocked = true
+  renderExtras()
+  render()
+})
+
+window.addEventListener("resize", () => {
+  if (!unlocked) applyGate()
+})
 
 render()
 renderExtras()
+requestAnimationFrame(() => applyGate())

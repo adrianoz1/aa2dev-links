@@ -74,6 +74,19 @@ h1 {
   font-size: 17px;
 }
 
+.roadmap {
+  position: relative;
+  width: min(1080px, calc(100% - 32px));
+  margin: 0 auto 80px;
+}
+
+.roadmap .trail,
+.roadmap .extras {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .trail {
   --rail: 28px;
   position: relative;
@@ -291,6 +304,84 @@ h1 {
   margin: 0 auto 80px;
   display: grid;
   gap: 12px;
+}
+
+.step.is-locked,
+.extras.is-locked {
+  filter: blur(6px);
+  user-select: none;
+}
+
+.gate {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, calc(100% - 24px));
+  padding: 22px;
+  border: 1px solid #292b33;
+  border-radius: 18px;
+  background: #121317;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.gate h2 {
+  margin: 6px 0 0;
+  font-family: var(--heading);
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.gate-copy,
+.gate-consent,
+.gate-error {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.gate-label {
+  display: block;
+  margin: 16px 0 6px;
+  font-family: var(--heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gate input {
+  width: 100%;
+  border: 1px solid #292b33;
+  border-radius: 12px;
+  background: #0b0b0f;
+  color: var(--text);
+  font: inherit;
+  padding: 12px 14px;
+}
+
+.gate input:focus-visible {
+  outline: 2px solid #ffd45c;
+  outline-offset: 2px;
+}
+
+.gate-submit {
+  width: 100%;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffd45c;
+  color: #14151a;
+  font-family: var(--heading);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.gate-error {
+  color: #ff8a3d;
 }
 
 .extras-title {
