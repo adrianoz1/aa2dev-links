@@ -29,7 +29,7 @@ body {
 }
 
 .hero {
-  width: min(720px, calc(100% - 32px));
+  width: min(1080px, calc(100% - 32px));
   margin: 0 auto;
   padding: 28px 0 8px;
 }
@@ -60,7 +60,6 @@ body {
 
 h1 {
   margin: 10px 0 0;
-  max-width: 16ch;
   font-family: var(--heading);
   font-size: clamp(36px, 6vw, 56px);
   font-weight: 700;
@@ -70,7 +69,7 @@ h1 {
 
 .lede {
   margin: 16px 0 0;
-  max-width: 42ch;
+  width: 100%;
   color: var(--muted);
   font-size: 17px;
 }
@@ -108,7 +107,7 @@ h1 {
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 14px;
-  align-items: start;
+  align-items: center;
 }
 
 .marker,
@@ -125,14 +124,18 @@ h1 {
 .marker {
   width: 56px;
   height: 56px;
+  min-width: 56px;
   border-radius: 50%;
   border: 2px solid var(--step);
   background: var(--page-bg);
   color: var(--step);
+  display: grid;
+  place-items: center;
   font-family: var(--heading);
   font-weight: 700;
   font-size: 15px;
-  letter-spacing: -0.04em;
+  line-height: 1;
+  letter-spacing: 0;
   position: relative;
   z-index: 1;
 }
@@ -253,12 +256,14 @@ h1 {
   .step {
     grid-template-columns: 1fr 56px 1fr;
     column-gap: 28px;
+    align-items: center;
   }
 
   .marker {
     grid-column: 2;
     grid-row: 1;
     justify-self: center;
+    align-self: center;
   }
 
   .card {
